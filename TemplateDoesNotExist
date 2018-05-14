@@ -1,0 +1,10 @@
+关于Exception Type: TemplateDoesNotExist
+Exception Value: rest_framework/form.html
+参考答案一:
+django_hstore
+添加
+到settings.py 下的 INSTALLED_APPS.
+参考答案二：
+添加django-filters
+到settings.py 下的 INSTALLED_APPS.
+我的解决办法是参考答案二中的，参考答案一试了没用。
