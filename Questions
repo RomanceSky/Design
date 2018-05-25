@@ -1,3 +1,9 @@
 1、AssertionError: Expected a `Response`, `HttpResponse` or `HttpStreamingResponse` to be returned from the view, but received a `<class 'rest_framework.utils.serializer_helpers.ReturnList'>`
 原因：
 filter_fields = ()写到模型中去了，这个是序列化类中的属性
+
+2、type object 'FormParser' has no attribute 'format'
+原因1:
+Parser
+原因2：
+Renderer
