@@ -9,6 +9,16 @@ The request parameter was added to authenticate() and support for backends that 
 代码
 
 ```
+  """
+    Authenticate against the settings ADMIN_LOGIN and ADMIN_PASSWORD.
+
+    Use the login name and a hash of the password. For example:
+
+    ADMIN_LOGIN = 'admin'
+    ADMIN_PASSWORD = 'pbkdf2_sha256$30000$Vo0VlMnkR4Bk$qEvtdyZRWTcOsCnI/oQ7fVOu1XAURIZYoOZ3iq8Dr4M='
+    """
+
+ 
 >>> from django.contrib.auth.hashers import check_password
 >>> from django.conf import settings
 >>> from django.contrib.auth.models import User
