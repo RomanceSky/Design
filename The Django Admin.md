@@ -57,3 +57,23 @@ Traceback (most recent call last):
 AttributeError: 'Settings' object has no attribute 'ADMIN_LOGIN'
 >>>
 ```
+
+```
+views.py
+
+def authenticate(request=None, **credentials):
+    from django.contrib.auth import authenticate
+    if django.VERSION < (1, 11):
+        return authenticate(**credentials)
+    else:
+        return authenticate(request=request, **credentials)
+
+serializers.py
+    def get_user(self, obj):
+        user = obj.order.user
+        if not user.address:
+            raise FileNotFoundError
+        return {
+            'name': user.first_name + ' ' + user.last_name, 'address': user.address, 'email': user.email
+        }
+```
