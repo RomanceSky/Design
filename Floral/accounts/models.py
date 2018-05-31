@@ -1,14 +1,18 @@
 from django.db import models
 
 # Create your models here.
+from django.contrib.auth.models import AbstractBaseUser
+
 
 class MyUsers(models.Model):
+    #REQUIRED_FIELDS = ('name',)
+    #USERNAME_FIELD = ('name')
     groups = models.ForeignKey(
-        'Group',
+        'Groups',
         null=False,
         blank=False,
-        related_name='groups',
-        on_delete=models.PROTECT
+        related_name='myusers',
+        on_delete=models.CASCADE
     )
     name = models.CharField(
             null=False,
@@ -27,7 +31,8 @@ class MyUsers(models.Model):
             max_length=125,
     )
 
-class Group(models.Model):
+
+class Groups(models.Model):
     name = models.CharField(
             null=False,
             blank=False,
@@ -38,4 +43,24 @@ class Group(models.Model):
             null=False,
             blank=True,
             max_length=125,
+    )
+
+class Ip(models.Model):
+    user = models.ForeignKey(
+        'MyUsers',
+        null=False,
+        blank=False,
+        related_name='ips',
+        on_delete=models.CASCADE
+    )
+    group = models.ForeignKey(
+        'Groups',
+        null=False,
+        blank=True,
+        related_name='ips',
+        on_delete=models.CASCADE
+    )
+    ip_addr = models.GenericIPAddressField(
+        blank=False,
+        null=False,
     )
