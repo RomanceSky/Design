@@ -2,13 +2,13 @@ from django.shortcuts import render
 # Create your views here.
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from accounts.serializers import UserSerializer, GroupSerializer, IpSerializer
+from accounts.serializers import UserSerializer, GroupSerializer, IpSerializer, CommentSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from knox.auth import TokenAuthentication
 from knox.models import AuthToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from accounts.models import Ip
+from accounts.models import Ip, Comment
 
 """
 class CustomMixin(viewsets.ModelViewSet):
@@ -100,6 +100,11 @@ class IpViewSet(viewsets.ModelViewSet):
     """
     queryset = Ip.objects.all()
     serializer_class = IpSerializer
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
 
 # # Create your views here.
 # from rest_framework import viewsets, permissions, filters, status

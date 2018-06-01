@@ -40,6 +40,7 @@ router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register(r'ips', views.IpViewSet)
+router.register(r'comments', views.CommentViewSet)
 
 # 使用自动URL路由连接我们的API。
 # 另外，我们还包括支持浏览器浏览API的登录URL。
