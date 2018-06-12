@@ -2,14 +2,18 @@ from django.shortcuts import render
 # Create your views here.
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from accounts.serializers import UserSerializer, GroupSerializer, IpSerializer, CommentSerializer
-from rest_framework.authtoken.models import Token
+from accounts.serializers import UserSerializer, GroupSerializer, CommentListSerializer,IpSerializer, CommentSerializer,CreateUserSerializer,CardSerializer,MemberSerializer
+# AdmireSerializerfrom rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from knox.auth import TokenAuthentication
 from knox.models import AuthToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from accounts.models import Ip, Comment
+from accounts.models import Ip, Comment, Admire, Card, Member
+from rest_framework import status
 
+from rest_framework.renderers import  JSONRenderer
+from rest_framework.parsers import JSONParser
+from django.utils.six import BytesIO
 """
 class CustomMixin(viewsets.ModelViewSet):
     authentication_classes = (
@@ -25,6 +29,14 @@ class CustomMixin(viewsets.ModelViewSet):
             print(self.__class__)
         return super(self.__class__, self).get_permissions()
 """
+
+class CreateCardViewSet(viewsets.ModelViewSet):
+    serializer_class = CardSerializer
+    queryset = Card.objects.all()
+
+class CreateMemberViewSet(viewsets.ModelViewSet):
+    serializer_class = MemberSerializer
+    queryset = Member.objects.all()
 
 class UserViewSet(viewsets.ModelViewSet):
     authentication_classes = (
@@ -87,6 +99,10 @@ class UserViewSet(viewsets.ModelViewSet):
 #                 )
 #
 
+class CreateUserViewSet(viewsets.ModelViewSet):
+    serializer_class = CreateUserSerializer
+    queryset = User.objects.all()
+
 class GroupViewSet(viewsets.ModelViewSet):
     """
     允许组查看或编辑的API路径。
@@ -101,10 +117,69 @@ class IpViewSet(viewsets.ModelViewSet):
     queryset = Ip.objects.all()
     serializer_class = IpSerializer
 
+
 class CommentViewSet(viewsets.ModelViewSet):
+
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    # serializer_class = CommentListSerializer
 
+
+    def create(self, request, *args, **kwargs):
+        serializer = CommentSerializer(data=request.data, many=True)
+        # json = JSONRenderer().render(serializer)
+        # stream = BytesIO(json)
+        # data = JSONParser().parse(stream)
+        # print(serializer)
+        # # result
+        # < QueryDict: {'username': ['charolim11']} >
+        # CommentSerializer(data= < QueryDict: {'username': ['charolim11']} >):
+        # email = EmailField()
+        # content = CharField(max_length=200)
+        # created = DateTimeField()
+
+        if serializer.is_valid(raise_exception=True):# 如果数据无效就返回400响应
+            # comment = serializer.save(user=request.user)
+            comment = serializer.save()
+
+            # print(comment)
+            # CommentSerializer(data={}):
+            # email = EmailField()
+            # content = CharField(max_length=200)
+            # created = DateTimeField()
+
+        # upon is serializer, down is deserializer
+        return Response(serializer.data)
+
+"""
+
+class AdmireViewSet(viewsets.ModelViewSet):
+    serializer_class = AdmireSerializer
+    queryset = Admire.objects.all()
+
+    # Serialize multiple objects
+    queryset = Admire.objects.all()
+    serializer = AdmireSerializer(queryset, many=True)
+    serializer.data
+
+
+    # Deserialize multiple objects
+
+    def create(self, request, *args, **kwargs):
+        # payment_method = request.data.get('payment_method')
+        payment_method = request.query_params.get('payment_method')
+
+        try:# int() argument must be a string, a bytes-like object or a number, not 'AnonymousUser'
+            admire = Admire.objects.get(user_id=request.user.id)
+        except Admire.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if admire.status == Admire.SUCCEED:
+            return Response('The admire has been paid.', status=status.HTTP_400_BAD_REQUEST)
+        if admire.expired_at < now():
+            admire.status = Admire.FAILED
+            admire.save()
+            return Response('The paymenet of admire is failured.', status=status.HTTP_400_BAD_REQUEST)
+"""
 
 # # Create your views here.
 # from rest_framework import viewsets, permissions, filters, status

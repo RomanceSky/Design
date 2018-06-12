@@ -41,6 +41,11 @@ router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register(r'ips', views.IpViewSet)
 router.register(r'comments', views.CommentViewSet)
+#router.register(r'admires', views.AdmireViewSet)
+router.register(r'createusers', views.CreateUserViewSet)
+router.register(r'cards', views.CreateCardViewSet)
+router.register(r'members', views.CreateMemberViewSet)
+
 
 # 使用自动URL路由连接我们的API。
 # 另外，我们还包括支持浏览器浏览API的登录URL。
